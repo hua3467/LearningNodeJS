@@ -9,6 +9,8 @@ app.use(express.static(__dirname));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 
+mongoose.Promise = Promise;
+
 var dbUrl = 'mongodb://admin:253531167hot@ds115446.mlab.com:15446/learning-node';
 
 var Message = mongoose.model('Message', {
@@ -22,18 +24,34 @@ app.get('/messages', (req, res) => {
     });
 });
 
-app.post('/messages', (req, res) => {
-    var message = new Message(req.body);
+app.post('/messages', async (req, res) => {
+    
+    try {
+        throw error;
+        
+        var message = new Message(req.body);
 
-    message.save((err) => {
-        if (err)
-            sendStatus(500);
+        var savedMessage = await message.save();
 
-        io.emit('message', req.body);
+        console.log('saved');
+
+        var censored = await Message.findOne({message: 'badword'});
+
+        if(censored) 
+            await Message.remove({_id: censored.id});
+        else
+            io.emit('message', req.body);
+
         res.sendStatus(200);
-    });
-
+    } catch (error) {
+        res.sendStatus(500);
+        return console.error(error);
+    } finally {
+        console.log('message post called');
+    }
+    
 });
+
 
 io.on('connection', (socket) =>{
     console.log('a user connected');
