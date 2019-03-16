@@ -1,5 +1,6 @@
 var readline = require('readline');
 var rl = readline.createInterface(process.stdin, process.stdout);
+var fs = require('fs');
 var realPerson = {
     name: '',
     sayings: []
@@ -9,13 +10,17 @@ rl.question("What is the name of a real person? ", function(answer){
 
     realPerson.name = answer;
 
-    rl.setPrompt(`What would ${realPerson.name} say?`);
+    fs.writeFileSync(realPerson.name + ".md", `${realPerson.name}\n============================\n\n`);
+
+    rl.setPrompt(`What would ${realPerson.name} say? `);
 
     rl.prompt();
 
     rl.on('line', function(saying){
 
         realPerson.sayings.push(saying.trim());
+
+        fs.appendFile(realPerson.name + ".md", `* ${saying.trim()}\n`, function(err){});
 
         if(saying.toLowerCase().trim() === 'exit'){
             rl.close();

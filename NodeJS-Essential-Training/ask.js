@@ -27,6 +27,6 @@ process.on('exit', function(){
     process.stdout.write("\n");
     process.stdout.write(`Go ${answers[1]}, ${answers[0]}. And stop doing ${answers[2]}`);
     process.stdout.write("\n");
-})
+});
 
 ask(0);
