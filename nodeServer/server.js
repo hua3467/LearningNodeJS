@@ -4,37 +4,57 @@ var server = require('http').createServer(app);
 var socketio = require('socket.io');
 var io = socketio().listen(server);
 var PORT = 3000;
-var searchResult = "Hello from server.";
-var fakeData = {type1: {
-                        key1:"one",
-                        key2:"two",
-                        key3: "three"
-                        },
-                type2: {
-                    keyA:"one",
-                    keyB:"two",
-                    keyC: "three"
-                    }};
+var searchResult = {
+    Butter: {
+        'Vitamin A - IU': 2499,
+        'Vitamin C': 0.0,
+        'Vitamin B12': 0.17,
+        'Vitamin B6': 0.003,
+        'Vitamin A - RAE': 684,
+        'Vitamin E': 2.32,
+        'Vitamin K': 7.0
+    },
+    Cheese: {
+        'Vitamin A - IU': 1265,
+        'Vitamin C': 0.0,
+        'Vitamin B12': 0.25,
+        'Vitamin B6': 0.035,
+        'Vitamin A - RAE': 362,
+        'Vitamin E': 0.65,
+        'Vitamin K': 3.4
+    },
+    Lingcod: {
+        'Vitamin A - IU': 58,
+        'Vitamin C': 0.0,
+        'Vitamin B12': 4.15,
+        'Vitamin B6': 0.346,
+        'Vitamin A - RAE': 17,
+        'Vitamin E': 0.0,
+        'Vitamin K': 0.0
+    }
+};
 
-io.on("connection", function(socket){
+io.on("connection", function (socket) {
     console.log("A new client has connected with the id" + socket.id + "!");
-    
-    socket.on("disconnect", function(){
+
+    socket.on("disconnect", function () {
         console.log("the client is disconnected!");
     });
-    
-    socket.on("Message", function(data){
-        console.log("Message from client: " + data.message);
-        
+
+    socket.on("Message", function (data) {
+        console.log("Message from client: " + data);
+
         // io.emit("Message", data);
-        io.emit("Result", {result: searchResult});
+        io.emit("Result", {
+            result: searchResult
+        });
     });
 });
 
-server.listen(PORT, function(){
+server.listen(PORT, function () {
     console.log("Listening on PORT " + PORT);
 });
 
-function searchData(keyword){
-
+function searchData(keyword) {
+    // search function.
 }
